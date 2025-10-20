@@ -1,0 +1,653 @@
+{
+  "info": {
+    "name": "Caregiving Platform API",
+    "description": "Complete API collection for the Caregiving Platform",
+    "version": "1.0.0",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "auth": {
+    "type": "bearer",
+    "bearer": [
+      {
+        "key": "token",
+        "value": "{{jwt_token}}",
+        "type": "string"
+      }
+    ]
+  },
+  "variable": [
+    {
+      "key": "base_url",
+      "value": "http://localhost:3001",
+      "type": "string"
+    },
+    {
+      "key": "jwt_token",
+      "value": "",
+      "type": "string"
+    }
+  ],
+  "item": [
+    {
+      "name": "Users",
+      "item": [
+        {
+          "name": "Create User",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"john.doe@example.com\",\n  \"password\": \"SecurePassword123!\",\n  \"firstName\": \"John\",\n  \"lastName\": \"Doe\",\n  \"phone\": \"+1234567890\",\n  \"role\": \"CLIENT\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/users",
+              "host": ["{{base_url}}"],
+              "path": ["users"]
+            }
+          }
+        },
+        {
+          "name": "Get All Users",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{base_url}}/users",
+              "host": ["{{base_url}}"],
+              "path": ["users"]
+            }
+          }
+        },
+        {
+          "name": "Get User by ID",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{base_url}}/users/:id",
+              "host": ["{{base_url}}"],
+              "path": ["users", ":id"],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "user_123"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Update User",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"firstName\": \"Jane\",\n  \"lastName\": \"Smith\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/users/:id",
+              "host": ["{{base_url}}"],
+              "path": ["users", ":id"],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "user_123"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Verify Email",
+          "request": {
+            "method": "POST",
+            "url": {
+              "raw": "{{base_url}}/users/:id/verify-email",
+              "host": ["{{base_url}}"],
+              "path": ["users", ":id", "verify-email"],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "user_123"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Delete User",
+          "request": {
+            "method": "DELETE",
+            "url": {
+              "raw": "{{base_url}}/users/:id",
+              "host": ["{{base_url}}"],
+              "path": ["users", ":id"],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "user_123"
+                }
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Caregivers",
+      "item": [
+        {
+          "name": "Create Caregiver Profile",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"userId\": \"user_123\",\n  \"bio\": \"Experienced caregiver with 5 years of experience in elderly care\",\n  \"experience\": 5,\n  \"hourlyRate\": 25.50,\n  \"rating\": 4.5,\n  \"services\": [\"personal_care\", \"companionship\"],\n  \"certifications\": [\n    {\n      \"name\": \"CPR Certification\",\n      \"issuingBody\": \"Red Cross\",\n      \"issueDate\": \"2023-01-01\",\n      \"expiryDate\": \"2025-01-01\"\n    }\n  ],\n  \"availability\": [\n    {\n      \"dayOfWeek\": \"monday\",\n      \"startTime\": \"09:00\",\n      \"endTime\": \"17:00\"\n    }\n  ]\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/caregivers",
+              "host": ["{{base_url}}"],
+              "path": ["caregivers"]
+            }
+          }
+        },
+        {
+          "name": "Get All Caregivers",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{base_url}}/caregivers",
+              "host": ["{{base_url}}"],
+              "path": ["caregivers"]
+            }
+          }
+        },
+        {
+          "name": "Search Caregivers",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{base_url}}/caregivers/search?services=personal_care&minRate=20&maxRate=30&minRating=4&page=1&limit=10",
+              "host": ["{{base_url}}"],
+              "path": ["caregivers", "search"],
+              "query": [
+                {
+                  "key": "services",
+                  "value": "personal_care"
+                },
+                {
+                  "key": "minRate",
+                  "value": "20"
+                },
+                {
+                  "key": "maxRate",
+                  "value": "30"
+                },
+                {
+                  "key": "minRating",
+                  "value": "4"
+                },
+                {
+                  "key": "page",
+                  "value": "1"
+                },
+                {
+                  "key": "limit",
+                  "value": "10"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Get Caregiver by ID",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{base_url}}/caregivers/:id",
+              "host": ["{{base_url}}"],
+              "path": ["caregivers", ":id"],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "caregiver_123"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Get Caregiver by User ID",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{base_url}}/caregivers/user/:userId",
+              "host": ["{{base_url}}"],
+              "path": ["caregivers", "user", ":userId"],
+              "variable": [
+                {
+                  "key": "userId",
+                  "value": "user_123"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Update Caregiver Profile",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"bio\": \"Updated bio with more experience\",\n  \"hourlyRate\": 30.00\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/caregivers/:id",
+              "host": ["{{base_url}}"],
+              "path": ["caregivers", ":id"],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "caregiver_123"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Update Availability",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "[\n  {\n    \"dayOfWeek\": \"monday\",\n    \"startTime\": \"08:00\",\n    \"endTime\": \"18:00\"\n  },\n  {\n    \"dayOfWeek\": \"tuesday\",\n    \"startTime\": \"09:00\",\n    \"endTime\": \"17:00\"\n  }\n]"
+            },
+            "url": {
+              "raw": "{{base_url}}/caregivers/:id/availability",
+              "host": ["{{base_url}}"],
+              "path": ["caregivers", ":id", "availability"],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "caregiver_123"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Update Rating",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"rating\": 5\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/caregivers/:id/rating",
+              "host": ["{{base_url}}"],
+              "path": ["caregivers", ":id", "rating"],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "caregiver_123"
+                }
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Admin",
+      "item": [
+        {
+          "name": "Create Admin",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"userId\": \"user_admin_2\",\n  \"role\": \"ADMIN\",\n  \"permissions\": [\"caregiver_approval\", \"user_management\"]\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/admin",
+              "host": ["{{base_url}}"],
+              "path": ["admin"]
+            }
+          }
+        },
+        {
+          "name": "Get All Admins",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{base_url}}/admin",
+              "host": ["{{base_url}}"],
+              "path": ["admin"]
+            }
+          }
+        },
+        {
+          "name": "Approve Caregiver",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"caregiverId\": \"caregiver_123\",\n  \"approved\": true,\n  \"notes\": \"Profile meets all requirements\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/admin/:adminId/approve-caregiver",
+              "host": ["{{base_url}}"],
+              "path": ["admin", ":adminId", "approve-caregiver"],
+              "variable": [
+                {
+                  "key": "adminId",
+                  "value": "admin_1"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Get Pending Caregivers",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{base_url}}/admin/:adminId/pending-caregivers",
+              "host": ["{{base_url}}"],
+              "path": ["admin", ":adminId", "pending-caregivers"],
+              "variable": [
+                {
+                  "key": "adminId",
+                  "value": "admin_1"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Get Approved Caregivers",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{base_url}}/admin/:adminId/approved-caregivers",
+              "host": ["{{base_url}}"],
+              "path": ["admin", ":adminId", "approved-caregivers"],
+              "variable": [
+                {
+                  "key": "adminId",
+                  "value": "admin_1"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Get Admin Permissions",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{base_url}}/admin/:adminId/permissions",
+              "host": ["{{base_url}}"],
+              "path": ["admin", ":adminId", "permissions"],
+              "variable": [
+                {
+                  "key": "adminId",
+                  "value": "admin_1"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Add Permission",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"permission\": \"system_settings\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/admin/:adminId/permissions",
+              "host": ["{{base_url}}"],
+              "path": ["admin", ":adminId", "permissions"],
+              "variable": [
+                {
+                  "key": "adminId",
+                  "value": "admin_1"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Check Permission",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{base_url}}/admin/:adminId/has-permission?permission=caregiver_approval",
+              "host": ["{{base_url}}"],
+              "path": ["admin", ":adminId", "has-permission"],
+              "query": [
+                {
+                  "key": "permission",
+                  "value": "caregiver_approval"
+                }
+              ],
+              "variable": [
+                {
+                  "key": "adminId",
+                  "value": "admin_1"
+                }
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Services",
+      "item": [
+        {
+          "name": "Create Service",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Personal Care\",\n  \"description\": \"Assistance with daily personal care activities\",\n  \"category\": \"PERSONAL_CARE\",\n  \"basePrice\": 25.00\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/services",
+              "host": ["{{base_url}}"],
+              "path": ["services"]
+            }
+          }
+        },
+        {
+          "name": "Get All Services",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{base_url}}/services",
+              "host": ["{{base_url}}"],
+              "path": ["services"]
+            }
+          }
+        },
+        {
+          "name": "Get Services by Category",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{base_url}}/services?category=PERSONAL_CARE",
+              "host": ["{{base_url}}"],
+              "path": ["services"],
+              "query": [
+                {
+                  "key": "category",
+                  "value": "PERSONAL_CARE"
+                }
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Bookings",
+      "item": [
+        {
+          "name": "Create Booking",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"clientId\": \"user_123\",\n  \"caregiverId\": \"caregiver_123\",\n  \"serviceId\": \"service_123\",\n  \"startTime\": \"2024-01-15T09:00:00Z\",\n  \"endTime\": \"2024-01-15T17:00:00Z\",\n  \"notes\": \"Regular care appointment\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/bookings",
+              "host": ["{{base_url}}"],
+              "path": ["bookings"]
+            }
+          }
+        },
+        {
+          "name": "Get All Bookings",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{base_url}}/bookings",
+              "host": ["{{base_url}}"],
+              "path": ["bookings"]
+            }
+          }
+        },
+        {
+          "name": "Get Bookings by Client",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{base_url}}/bookings?clientId=user_123",
+              "host": ["{{base_url}}"],
+              "path": ["bookings"],
+              "query": [
+                {
+                  "key": "clientId",
+                  "value": "user_123"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Get Bookings by Caregiver",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{base_url}}/bookings?caregiverId=caregiver_123",
+              "host": ["{{base_url}}"],
+              "path": ["bookings"],
+              "query": [
+                {
+                  "key": "caregiverId",
+                  "value": "caregiver_123"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Update Booking Status",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"status\": \"CONFIRMED\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/bookings/:id/status",
+              "host": ["{{base_url}}"],
+              "path": ["bookings", ":id", "status"],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "booking_123"
+                }
+              ]
+            }
+          }
+        }
+      ]
+    }
+  ]
+}
