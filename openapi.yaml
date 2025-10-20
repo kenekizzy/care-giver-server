@@ -1,0 +1,574 @@
+openapi: 3.0.3
+info:
+  title: Caregiving Platform API
+  description: |
+    A comprehensive API for managing a caregiving platform that connects clients with professional caregivers.
+    
+    ## Features
+    - **User Management**: Register and manage users (clients, caregivers, admins)
+    - **Caregiver Profiles**: Create and manage detailed caregiver profiles with services, certifications, and availability
+    - **Admin Panel**: Administrative functions for approving caregivers and managing the platform
+    - **Booking System**: Schedule and manage caregiving appointments
+    - **Service Management**: Define and categorize available caregiving services
+    
+    ## Authentication
+    This API uses Bearer token authentication. Include your token in the Authorization header:
+    `Authorization: Bearer <your-token>`
+  version: 1.0.0
+  contact:
+    name: API Support
+    url: https://caregiving-platform.com/support
+    email: support@caregiving-platform.com
+  license:
+    name: MIT
+    url: https://opensource.org/licenses/MIT
+
+servers:
+  - url: http://localhost:3001
+    description: Development server
+  - url: https://api.caregiving-platform.com
+    description: Production server
+
+security:
+  - bearerAuth: []
+
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+      description: JWT token for authentication
+
+  schemas:
+    User:
+      type: object
+      properties:
+        id:
+          type: string
+          example: "user_123"
+        email:
+          type: string
+          format: email
+          example: "john.doe@example.com"
+        firstName:
+          type: string
+          example: "John"
+        lastName:
+          type: string
+          example: "Doe"
+        phone:
+          type: string
+          example: "+1234567890"
+        role:
+          type: string
+          enum: [CLIENT, CAREGIVER, ADMIN]
+          example: "CLIENT"
+        isVerified:
+          type: boolean
+          example: true
+        createdAt:
+          type: string
+          format: date-time
+          example: "2023-01-01T00:00:00.000Z"
+        updatedAt:
+          type: string
+          format: date-time
+          example: "2023-01-01T00:00:00.000Z"
+
+    CreateUserDto:
+      type: object
+      required:
+        - email
+        - password
+        - firstName
+        - lastName
+        - role
+      properties:
+        email:
+          type: string
+          format: email
+          example: "john.doe@example.com"
+        password:
+          type: string
+          minLength: 8
+          example: "SecurePassword123!"
+        firstName:
+          type: string
+          example: "John"
+        lastName:
+          type: string
+          example: "Doe"
+        phone:
+          type: string
+          example: "+1234567890"
+        role:
+          type: string
+          enum: [CLIENT, CAREGIVER, ADMIN]
+          example: "CLIENT"
+
+    Caregiver:
+      type: object
+      properties:
+        id:
+          type: string
+          example: "caregiver_123"
+        userId:
+          type: string
+          example: "user_123"
+        bio:
+          type: string
+          example: "Experienced caregiver with 5 years of experience..."
+        experience:
+          type: number
+          example: 5
+        hourlyRate:
+          type: number
+          format: float
+          example: 25.50
+        rating:
+          type: number
+          format: float
+          example: 4.5
+        reviewCount:
+          type: number
+          example: 25
+        isVerified:
+          type: boolean
+          example: true
+        services:
+          type: array
+          items:
+            type: string
+          example: ["personal_care", "companionship"]
+        certifications:
+          type: array
+          items:
+            type: object
+            properties:
+              name:
+                type: string
+                example: "CPR Certification"
+              issuingBody:
+                type: string
+                example: "Red Cross"
+              issueDate:
+                type: string
+                format: date
+                example: "2023-01-01"
+              expiryDate:
+                type: string
+                format: date
+                example: "2025-01-01"
+              isVerified:
+                type: boolean
+                example: true
+        availability:
+          type: array
+          items:
+            type: object
+            properties:
+              dayOfWeek:
+                type: string
+                example: "monday"
+              startTime:
+                type: string
+                example: "09:00"
+              endTime:
+                type: string
+                example: "17:00"
+              isActive:
+                type: boolean
+                example: true
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+
+    Admin:
+      type: object
+      properties:
+        id:
+          type: string
+          example: "admin_123"
+        userId:
+          type: string
+          example: "user_123"
+        role:
+          type: string
+          enum: [SUPER_ADMIN, ADMIN, MODERATOR]
+          example: "ADMIN"
+        permissions:
+          type: array
+          items:
+            type: string
+          example: ["caregiver_approval", "user_management"]
+        isActive:
+          type: boolean
+          example: true
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+
+    Service:
+      type: object
+      properties:
+        id:
+          type: string
+          example: "service_123"
+        name:
+          type: string
+          example: "Personal Care"
+        description:
+          type: string
+          example: "Assistance with daily personal care activities"
+        category:
+          type: string
+          enum: [PERSONAL_CARE, MEDICAL_CARE, COMPANIONSHIP, HOUSEHOLD_TASKS, TRANSPORTATION, SPECIALIZED_CARE]
+          example: "PERSONAL_CARE"
+        basePrice:
+          type: number
+          format: float
+          example: 25.00
+        isActive:
+          type: boolean
+          example: true
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+
+    Booking:
+      type: object
+      properties:
+        id:
+          type: string
+          example: "booking_123"
+        clientId:
+          type: string
+          example: "user_123"
+        caregiverId:
+          type: string
+          example: "caregiver_123"
+        serviceId:
+          type: string
+          example: "service_123"
+        startTime:
+          type: string
+          format: date-time
+          example: "2024-01-15T09:00:00Z"
+        endTime:
+          type: string
+          format: date-time
+          example: "2024-01-15T17:00:00Z"
+        status:
+          type: string
+          enum: [PENDING, CONFIRMED, IN_PROGRESS, COMPLETED, CANCELLED]
+          example: "PENDING"
+        totalAmount:
+          type: number
+          format: float
+          example: 200.00
+        notes:
+          type: string
+          example: "Regular care appointment"
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+
+    Error:
+      type: object
+      properties:
+        statusCode:
+          type: number
+          example: 400
+        message:
+          oneOf:
+            - type: string
+            - type: array
+              items:
+                type: string
+          example: "Validation failed"
+        error:
+          type: string
+          example: "Bad Request"
+
+paths:
+  /users:
+    post:
+      tags:
+        - users
+      summary: Create a new user
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateUserDto'
+      responses:
+        '201':
+          description: User created successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+        '409':
+          description: User already exists
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+    get:
+      tags:
+        - users
+      summary: Get all users
+      responses:
+        '200':
+          description: Users retrieved successfully
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/User'
+
+  /users/{id}:
+    get:
+      tags:
+        - users
+      summary: Get user by ID
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+          example: "user_123"
+      responses:
+        '200':
+          description: User retrieved successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+        '404':
+          description: User not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /caregivers:
+    post:
+      tags:
+        - caregivers
+      summary: Create a new caregiver profile
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - userId
+                - bio
+                - experience
+                - hourlyRate
+                - services
+              properties:
+                userId:
+                  type: string
+                  example: "user_123"
+                bio:
+                  type: string
+                  example: "Experienced caregiver with 5 years of experience..."
+                experience:
+                  type: number
+                  example: 5
+                hourlyRate:
+                  type: number
+                  format: float
+                  example: 25.50
+                services:
+                  type: array
+                  items:
+                    type: string
+                  example: ["personal_care", "companionship"]
+      responses:
+        '201':
+          description: Caregiver profile created successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Caregiver'
+    get:
+      tags:
+        - caregivers
+      summary: Get all caregivers
+      responses:
+        '200':
+          description: List of all caregivers
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Caregiver'
+
+  /caregivers/search:
+    get:
+      tags:
+        - caregivers
+      summary: Search caregivers with filters
+      parameters:
+        - name: services
+          in: query
+          schema:
+            type: array
+            items:
+              type: string
+          example: ["personal_care"]
+        - name: minRate
+          in: query
+          schema:
+            type: number
+          example: 20
+        - name: maxRate
+          in: query
+          schema:
+            type: number
+          example: 30
+        - name: minRating
+          in: query
+          schema:
+            type: number
+          example: 4
+        - name: page
+          in: query
+          schema:
+            type: number
+          example: 1
+        - name: limit
+          in: query
+          schema:
+            type: number
+          example: 10
+      responses:
+        '200':
+          description: Filtered list of caregivers
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  caregivers:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Caregiver'
+                  total:
+                    type: number
+                  page:
+                    type: number
+                  limit:
+                    type: number
+
+  /admin:
+    post:
+      tags:
+        - admin
+      summary: Create a new admin user
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - userId
+                - role
+              properties:
+                userId:
+                  type: string
+                  example: "user_123"
+                role:
+                  type: string
+                  enum: [SUPER_ADMIN, ADMIN, MODERATOR]
+                  example: "ADMIN"
+                permissions:
+                  type: array
+                  items:
+                    type: string
+                  example: ["caregiver_approval", "user_management"]
+      responses:
+        '201':
+          description: Admin created successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Admin'
+
+  /admin/{adminId}/approve-caregiver:
+    post:
+      tags:
+        - admin
+      summary: Approve or reject a caregiver
+      parameters:
+        - name: adminId
+          in: path
+          required: true
+          schema:
+            type: string
+          example: "admin_1"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - caregiverId
+                - approved
+              properties:
+                caregiverId:
+                  type: string
+                  example: "caregiver_123"
+                approved:
+                  type: boolean
+                  example: true
+                notes:
+                  type: string
+                  example: "Profile meets all requirements"
+      responses:
+        '200':
+          description: Caregiver approval status updated
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  message:
+                    type: string
+
+tags:
+  - name: users
+    description: User management operations
+  - name: caregivers
+    description: Caregiver profile and search operations
+  - name: admin
+    description: Administrative operations for platform management
+  - name: bookings
+    description: Appointment booking and management
+  - name: services
+    description: Service category and management operations
